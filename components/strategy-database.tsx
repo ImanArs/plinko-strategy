@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,7 +9,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Clock, Trash2 } from "lucide-react";
+import { Tabs } from "./ui/tabs";
+import { AddOwnStrategy } from "./addOwnStrategy";
 
 interface Strategy {
   id: number;
@@ -97,38 +99,125 @@ export default function StrategyDatabase() {
     null
   );
 
+  const [tab, setTab] = useState("strategies");
+  const [ownStrategies, setOwnStrategies] = useState<Strategy[]>([]);
+  console.log(ownStrategies);
+  useEffect(() => {
+    const ownStrategieslet = JSON.parse(
+      localStorage.getItem("ownStrategies") || "[]"
+    );
+
+    setOwnStrategies(ownStrategieslet);
+  }, []);
+
+  const handleClick = (tab: string) => setTab(tab);
+  const removeStrategy = (id: number) => {
+    const updatedStrategies = ownStrategies.filter(
+      (strategy) => strategy.id !== id
+    );
+    setOwnStrategies(updatedStrategies);
+    localStorage.setItem("ownStrategies", JSON.stringify(updatedStrategies));
+  };
+
   return (
     <div className="p-6">
       <h1 className="mb-6 text-2xl font-bold text-white">Plinko Strategy</h1>
-
-      <div className="grid gap-6 ">
-        {strategies.map((strategy) => (
-          <motion.div
-            key={strategy.id}
-            className="overflow-hidden rounded-lg bg-gray-800 shadow-lg border-none"
-            whileHover={{ y: -5 }}
-            transition={{ duration: 0.2 }}
-          >
-            <img
-              src={strategy.image || "/placeholder.svg"}
-              alt={strategy.title}
-              className="h-48 w-full object-cover"
-            />
-            <div className="p-4">
-              <h2 className="mb-2 text-xl font-semibold text-white">
-                {strategy.title}
-              </h2>
-              <p className="mb-4 text-gray-400">{strategy.description}</p>
-              <Button
-                onClick={() => setSelectedStrategy(strategy)}
-                className="w-full bg-purple-600 hover:bg-purple-700"
-              >
-                Read More
-              </Button>
-            </div>
-          </motion.div>
-        ))}
+      <div className="my-5">
+        <Button
+          variant={tab === "strategies" ? "" : "outline"}
+          onClick={() => handleClick("strategies")}
+          className="mr-2"
+        >
+          strategy
+        </Button>
+        <Button
+          variant={tab === "own" ? "" : "outline"}
+          onClick={() => handleClick("own")}
+          className="mr-2"
+        >
+          Own strategy
+        </Button>
       </div>
+      {tab === "strategies" && (
+        <div className="grid gap-6 ">
+          {strategies.map((strategy) => (
+            <motion.div
+              key={strategy.id}
+              className="overflow-hidden rounded-lg bg-gray-800 shadow-lg border-none"
+              whileHover={{ y: -5 }}
+              transition={{ duration: 0.2 }}
+            >
+              <img
+                src={strategy.image || "/placeholder.svg"}
+                alt={strategy.title}
+                className="h-48 w-full object-cover"
+              />
+              <div className="p-4">
+                <h2 className="mb-2 text-xl font-semibold text-white">
+                  {strategy.title}
+                </h2>
+                <p className="mb-4 text-gray-400">{strategy.description}</p>
+                <Button
+                  onClick={() => setSelectedStrategy(strategy)}
+                  className="w-full bg-purple-600 hover:bg-purple-700"
+                >
+                  Read More
+                </Button>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      )}
+      {tab === "own" && (
+        <>
+          <AddOwnStrategy />
+          <div className="grid gap-6 ">
+            {Array.isArray(ownStrategies) && ownStrategies.length < 1 && (
+              <div className="p-5 border-2 border-dashed border-purple-500 bg-purple-500 bg-opacity-20 rounded-lg">
+                <Clock className="h-12 w-12 mx-auto mb-4 text-purple-500" />
+                <p className="text-purple-500 text-center text-[34px]">
+                  You haven't added any strategies yet.
+                </p>
+              </div>
+            )}
+            {Array.isArray(ownStrategies) &&
+              ownStrategies.map((strategy) => (
+                <motion.div
+                  key={strategy.id}
+                  className="overflow-hidden rounded-lg bg-gray-800 shadow-lg border-none"
+                  whileHover={{ y: -5 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <img
+                    src={strategy.image || "/placeholder.svg"}
+                    alt={strategy.title}
+                    className="h-48 w-full object-cover"
+                  />
+                  <div className="p-4">
+                    <h2 className="mb-2 text-xl font-semibold text-white">
+                      {strategy.title}
+                    </h2>
+                    <p className="mb-4 text-gray-400">{strategy.description}</p>
+                    <div className="flex gap-2">
+                      <Button
+                        onClick={() => setSelectedStrategy(strategy)}
+                        className="w-full bg-purple-600 hover:bg-purple-700"
+                      >
+                        Read More
+                      </Button>
+                      <Button
+                        onClick={() => removeStrategy(strategy.id)}
+                        className="w-18 bg-red-500 hover:bg-red-700"
+                      >
+                        <Trash2 />
+                      </Button>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+          </div>
+        </>
+      )}
 
       {/* Strategy Detail Modal */}
       <Dialog
