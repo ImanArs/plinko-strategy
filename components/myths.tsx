@@ -52,7 +52,6 @@ export default function MythSwipeGame() {
                 }}
               >
                 <h2 className="text-lg font-bold">{myth.title}</h2>
-                <h2 className="text-lg font-bold">{index}</h2>
                 <p className="text-sm text-gray-300">{myth.description}</p>
               </motion.div>
             ))
