@@ -43,7 +43,7 @@ export default function App() {
   }
 
   return (
-    <div className="flex h-screen flex-col bg-gray-900 text-white">
+    <div className="flex min-h-screen flex-col text-white">
       <main className="flex-1 pb-16">
         {activeTab === "home" && <HomeScreen />}
         {activeTab === "strategies" && <StrategyDatabase />}

@@ -11,7 +11,9 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { Plus, ArrowRight } from "lucide-react";
+import { Plus, ArrowRight, Info } from "lucide-react";
+import { Card } from "./ui/card";
+import BankrollPlans from "./CurrentPlanBankroll";
 
 interface BetCalculation {
   amount: number;
@@ -133,6 +135,17 @@ export default function HomeScreen() {
         </h1>
         <p className="text-gray-400">Your smart betting assistant</p>
       </div>
+
+      <div className="bg-purple-800/30 rounded-lg p-4 mb-6 flex items-start gap-4">
+        <Info className="text-purple-500 w-5 h-5" />
+        <p className="text-xs text-purple-500 w-full">
+          Your financial decisions are entirely your own. This app provides
+          guidance, but you are free to choose or modify any plan based on your
+          own strategy and comfort level.
+        </p>
+      </div>
+
+      <BankrollPlans />
 
       <div className="mb-6 flex justify-between rounded-lg bg-gray-800 p-4">
         <div className="text-center">

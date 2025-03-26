@@ -10,7 +10,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { ArrowLeft, Clock, Trash2 } from "lucide-react";
-import { Tabs } from "./ui/tabs";
 import { AddOwnStrategy } from "./addOwnStrategy";
 
 interface Strategy {
